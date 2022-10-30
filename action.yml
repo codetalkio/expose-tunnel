@@ -25,10 +25,10 @@ outputs:
   ts: # timestamp of message posted
     description: "The timestamp on the message that was posted into Slack when using bot token"
 runs:
-  # using: "node16"
-  # main: "src/main.js"
-  using: "composite"
-  steps:
-    # - uses: actions/checkout@v3
-    - run: node src/main.js
-      shell: bash
+  using: "node16"
+  main: "src/main.js"
+  # using: "composite"
+  # steps:
+  #   # - uses: actions/checkout@v3
+  #   - run: node src/main.js
+  #     shell: bash
