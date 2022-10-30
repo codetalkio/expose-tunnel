@@ -2710,7 +2710,9 @@ const startTunnel = async (port, endpoint) => {
       }
       // Ensure nothing comes after the URL.
       const [cleanUrlPart, ..._rest] = restWithUrlPart.split(" ");
-      const url = `${endpoint}${cleanUrlPart}`.replace(/\r?\n|\r/g, "").trim();
+      const url = `http://${endpoint}${cleanUrlPart}`
+        .replace(/\r?\n|\r/g, "")
+        .trim();
       return url;
     }
   );
@@ -3092,7 +3094,7 @@ const main = async () => {
   console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
-  core.setOutput("tunnel-url", tunnelUrl);
+  // core.setOutput("tunnel-url", tunnelUrl);
 
   // Finally, we write a file to indicate that the tunnel is ready and we've done
   // everything we need to do from the script here.
