@@ -1,4 +1,4 @@
-# expose-tunnel
+# expose-tunnel [![CI: Test Tunnel Forwarding](https://github.com/codetalkio/expose-tunnel/actions/workflows/ci.yml/badge.svg)](https://github.com/codetalkio/expose-tunnel/actions/workflows/ci.yml)
 > Easily create tunnels to access your GitHub Action workflows from public endpoints.
 
 There are many services and tools that exist to create tunnels to your localhost and create a public URL that other people can access those services on:
