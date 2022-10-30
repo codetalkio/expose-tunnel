@@ -1,5 +1,5 @@
-name: 'expose-tunnel'
-description: 'Easily create tunnels to access your GitHub Action workflows from public endpoints'
+name: "expose-tunnel"
+description: "Easily create tunnels to access your GitHub Action workflows from public endpoints"
 inputs:
   service:
     required: true
@@ -19,11 +19,15 @@ inputs:
     description: If the step should block and keep the job alive for the specified amount of time. This means you won't be able to use the output in later steps since the tunnel will be closing after the step.
 outputs:
   time: # id of output
-    description: 'The time'
+    description: "The time"
   thread_ts: # threaded timestamp on the message that was posted when using bot token
-    description: 'The timestamp on the message that was posted into Slack when using bot token'
+    description: "The timestamp on the message that was posted into Slack when using bot token"
   ts: # timestamp of message posted
-    description: 'The timestamp on the message that was posted into Slack when using bot token'
+    description: "The timestamp on the message that was posted into Slack when using bot token"
 runs:
-  using: 'node18'
-  main: 'src/index.js'
+  # using: "node16"
+  # main: "src/index.js"
+  using: "composite"
+  steps:
+    - run: node src/index.js
+      shell: bash
