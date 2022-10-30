@@ -2769,13 +2769,11 @@ module.exports = {
 
 const RESOURCES_FOLDER = "/tmp/expose-tunnel";
 const TUNNEL_IS_READY_FILE = `${RESOURCES_FOLDER}/.tunnel-is-ready`;
-const TUNNEL_URL_FILE = `${RESOURCES_FOLDER}/.tunnel-url`;
 const DEBUG_OUTPUT = true;
 
 module.exports = {
   RESOURCES_FOLDER,
   TUNNEL_IS_READY_FILE,
-  TUNNEL_URL_FILE,
   DEBUG_OUTPUT,
 };
 
@@ -2787,7 +2785,7 @@ module.exports = {
 
 const { spawn } = __nccwpck_require__(81);
 
-const { TUNNEL_URL_FILE, DEBUG_OUTPUT } = __nccwpck_require__(438);
+const { DEBUG_OUTPUT } = __nccwpck_require__(438);
 let saveTunnelUrl = undefined;
 let saveTunnelFailed = undefined;
 
@@ -2803,22 +2801,22 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * NOTE: We wait about 10 seconds (50 * 200ms = 10,000ms = 10s).
  */
 const waitForTunnelToBeReady = async () => {
-  console.log(`>> Waiting for tunnel file '${TUNNEL_URL_FILE}' to be written.`);
+  console.log(`>> Waiting for tunnel url to be set.`);
   for (let i = 0; i < 50; i++) {
     if (!saveTunnelUrl && !saveTunnelFailed) {
       await delay(200);
     }
   }
-
-  if (!saveTunnelUrl || saveTunnelFailed) {
-    console.log(
-      `>> Failed to set up tunnel, it is currently '${saveTunnelUrl}', exiting.`
-    );
-    process.exit(1);
+  const tunnelUrl = saveTunnelUrl;
+  const tunnelFailed = saveTunnelFailed;
+  if (tunnelFailed) {
+    saveTunnelUrl = undefined;
+    saveTunnelFailed = undefined;
   }
+
   return {
-    tunnelUrl: saveTunnelUrl,
-    tunnelFailed: saveTunnelFailed,
+    tunnelUrl,
+    tunnelFailed,
   };
 };
 
@@ -3147,25 +3145,29 @@ const main = async () => {
   const services = [service, ...fallbackServices];
 
   // Try all fallbacks.
+  let tunnelUrl = undefined;
   for (let i = 0; i < services.length; i++) {
     const s = services[i];
     if (i > 0) {
       console.log(`>> Attempting fallback service '${s}'.`);
     }
     await prepareService(service);
-    const { tunnelUrl, tunnelFailed, _tunnelProcess } = await startService(
-      s,
-      port,
-      selfHostedEndpoint
-    );
-    if (tunnelUrl) {
+    const tunnel = await startService(s, port, selfHostedEndpoint);
+    if (tunnel.tunnelUrl) {
+      tunnelUrl = tunnel.tunnelUrl;
       break;
-    } else if (tunnelFailed) {
+    } else if (tunnel.tunnelFailed) {
       console.error(
         `>> Failed to set up tunnel using service '${s}', proceeding to any fallbacks.`
       );
       continue;
     }
+  }
+  if (!tunnelUrl) {
+    console.log(
+      `>> Failed to set up tunnel, it is currently '${tunnelUrl}', exiting.`
+    );
+    process.exit(1);
   }
   console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 

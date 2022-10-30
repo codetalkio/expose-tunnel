@@ -1,6 +1,6 @@
 const { spawn } = require("child_process");
 
-const { TUNNEL_URL_FILE, DEBUG_OUTPUT } = require("./constants.js");
+const { DEBUG_OUTPUT } = require("./constants.js");
 let saveTunnelUrl = undefined;
 let saveTunnelFailed = undefined;
 
@@ -16,22 +16,22 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * NOTE: We wait about 10 seconds (50 * 200ms = 10,000ms = 10s).
  */
 const waitForTunnelToBeReady = async () => {
-  console.log(`>> Waiting for tunnel file '${TUNNEL_URL_FILE}' to be written.`);
+  console.log(`>> Waiting for tunnel url to be set.`);
   for (let i = 0; i < 50; i++) {
     if (!saveTunnelUrl && !saveTunnelFailed) {
       await delay(200);
     }
   }
-
-  if (!saveTunnelUrl || saveTunnelFailed) {
-    console.log(
-      `>> Failed to set up tunnel, it is currently '${saveTunnelUrl}', exiting.`
-    );
-    process.exit(1);
+  const tunnelUrl = saveTunnelUrl;
+  const tunnelFailed = saveTunnelFailed;
+  if (tunnelFailed) {
+    saveTunnelUrl = undefined;
+    saveTunnelFailed = undefined;
   }
+
   return {
-    tunnelUrl: saveTunnelUrl,
-    tunnelFailed: saveTunnelFailed,
+    tunnelUrl,
+    tunnelFailed,
   };
 };
 

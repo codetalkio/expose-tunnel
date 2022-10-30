@@ -70,25 +70,29 @@ const main = async () => {
   const services = [service, ...fallbackServices];
 
   // Try all fallbacks.
+  let tunnelUrl = undefined;
   for (let i = 0; i < services.length; i++) {
     const s = services[i];
     if (i > 0) {
       console.log(`>> Attempting fallback service '${s}'.`);
     }
     await prepareService(service);
-    const { tunnelUrl, tunnelFailed, _tunnelProcess } = await startService(
-      s,
-      port,
-      selfHostedEndpoint
-    );
-    if (tunnelUrl) {
+    const tunnel = await startService(s, port, selfHostedEndpoint);
+    if (tunnel.tunnelUrl) {
+      tunnelUrl = tunnel.tunnelUrl;
       break;
-    } else if (tunnelFailed) {
+    } else if (tunnel.tunnelFailed) {
       console.error(
         `>> Failed to set up tunnel using service '${s}', proceeding to any fallbacks.`
       );
       continue;
     }
+  }
+  if (!tunnelUrl) {
+    console.log(
+      `>> Failed to set up tunnel, it is currently '${tunnelUrl}', exiting.`
+    );
+    process.exit(1);
   }
   console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
