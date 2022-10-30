@@ -61,6 +61,11 @@ const main = async () => {
   });
 
   childProcess.exec(`mkdir -p ${RESOURCES_FOLDER}`);
+
+  if (fallback) {
+    console.log("Fallback:", JSON.parse(fallback));
+  }
+
   await prepareService(service);
   const { tunnelUrl, _tunnelProcess } = await startService(
     service,
