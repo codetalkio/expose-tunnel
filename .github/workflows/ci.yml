@@ -1,4 +1,4 @@
-name: Tests
+name: "CI: Test Tunnel Forwarding"
 on:
   pull_request:
   push:
