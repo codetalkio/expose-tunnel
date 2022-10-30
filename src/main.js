@@ -4,11 +4,10 @@ const childProcess = require("child_process");
 
 const core = require("@actions/core");
 
+const { RESOURCES_FOLDER, TUNNEL_IS_READY_FILE } = require("./constants.js");
 const { delay } = require("./helper.js");
 const localhostRun = require("./localhost-run.js");
 const bore = require("./bore.js");
-
-const TUNNEL_IS_READY_FILE = "./.tunnel-is-ready";
 
 /**
  * The downloadable files and all information required to post-process them.
@@ -71,7 +70,6 @@ const main = async () => {
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
   core.setOutput("tunnel-url", tunnelUrl);
-  core.setOutput("tunnel_url", tunnelUrl);
 
   // Finally, we write a file to indicate that the tunnel is ready and we've done
   // everything we need to do from the script here.
@@ -144,14 +142,14 @@ const prepareService = async (service) => {
  */
 const extractService = async (downloadedFilename, extractedFilename) => {
   console.log(`>> Extracting file ./${downloadedFilename}.tar.gz`);
-  await childProcess.exec(
-    `cd ./resources && tar -xf ./${downloadedFilename}.tar.gz`
+  childProcess.exec(
+    `cd ${RESOURCES_FOLDER} && tar -xf ./${downloadedFilename}.tar.gz`
   );
 
   // Sometimes the tar process is not fully done creating the file, before the command exits.
   // We introduce a small check and delay here in that case, before renaming it.
   for (let i = 0; i < 10; i++) {
-    if (!fs.existsSync(`./resources/${extractedFilename}`)) {
+    if (!fs.existsSync(`${RESOURCES_FOLDER}/${extractedFilename}`)) {
       await delay(200);
     }
   }
@@ -161,7 +159,7 @@ const extractService = async (downloadedFilename, extractedFilename) => {
  * Download a file from a given URL, following redirects.
  */
 const download = (url, filename) => {
-  filename = `./resources/${filename}`;
+  filename = `${RESOURCES_FOLDER}/${filename}`;
   console.log(
     `>> Fetching binary from '${url}' and saving it to '${filename}'.`
   );

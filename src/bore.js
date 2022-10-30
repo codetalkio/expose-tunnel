@@ -1,16 +1,12 @@
-const { spawn } = require("child_process");
-const fs = require("fs");
-
+const { RESOURCES_FOLDER } = require("./constants.js");
 const { waitForTunnelToBeReady, startTunnelProcess } = require("./helper.js");
-
-const DEBUG_OUTPUT = true;
 
 /**
  * We start the SSH tunnel to localhost.run and return the tunnel url.
  */
 const startTunnel = async (port, endpoint) => {
   const tunnel = startTunnelProcess(
-    "./resources/bore",
+    `${RESOURCES_FOLDER}/bore`,
     ["local", port, `--to`, endpoint],
     (stdout) => {
       // Parse the URL out of the output string that looks roughly like the following:

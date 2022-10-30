@@ -1,8 +1,7 @@
 const { spawn } = require("child_process");
 const fs = require("fs");
 
-const TUNNEL_URL_FILE = "./resources/.tunnel-url";
-const DEBUG_OUTPUT = true;
+const { TUNNEL_URL_FILE } = require("./constants.js");
 
 /**
  * Helper funciton to await a defined amount of time.

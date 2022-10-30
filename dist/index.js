@@ -2691,19 +2691,15 @@ exports["default"] = _default;
 /***/ 710:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { spawn } = __nccwpck_require__(81);
-const fs = __nccwpck_require__(147);
-
+const { RESOURCES_FOLDER } = __nccwpck_require__(438);
 const { waitForTunnelToBeReady, startTunnelProcess } = __nccwpck_require__(989);
-
-const DEBUG_OUTPUT = true;
 
 /**
  * We start the SSH tunnel to localhost.run and return the tunnel url.
  */
 const startTunnel = async (port, endpoint) => {
   const tunnel = startTunnelProcess(
-    "./resources/bore",
+    `${RESOURCES_FOLDER}/bore`,
     ["local", port, `--to`, endpoint],
     (stdout) => {
       // Parse the URL out of the output string that looks roughly like the following:
@@ -2733,14 +2729,31 @@ module.exports = {
 
 /***/ }),
 
+/***/ 438:
+/***/ ((module) => {
+
+const RESOURCES_FOLDER = "/tmp/expose-tunnel";
+const TUNNEL_IS_READY_FILE = `${RESOURCES_FOLDER}/.tunnel-is-ready`;
+const TUNNEL_URL_FILE = `${RESOURCES_FOLDER}/.tunnel-url`;
+const DEBUG_OUTPUT = true;
+
+module.exports = {
+  RESOURCES_FOLDER,
+  TUNNEL_IS_READY_FILE,
+  TUNNEL_URL_FILE,
+  DEBUG_OUTPUT,
+};
+
+
+/***/ }),
+
 /***/ 989:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { spawn } = __nccwpck_require__(81);
 const fs = __nccwpck_require__(147);
 
-const TUNNEL_URL_FILE = "./resources/.tunnel-url";
-const DEBUG_OUTPUT = true;
+const { TUNNEL_URL_FILE } = __nccwpck_require__(438);
 
 /**
  * Helper funciton to await a defined amount of time.
@@ -3014,11 +3027,10 @@ const childProcess = __nccwpck_require__(81);
 
 const core = __nccwpck_require__(186);
 
+const { RESOURCES_FOLDER, TUNNEL_IS_READY_FILE } = __nccwpck_require__(438);
 const { delay } = __nccwpck_require__(989);
 const localhostRun = __nccwpck_require__(91);
 const bore = __nccwpck_require__(710);
-
-const TUNNEL_IS_READY_FILE = "./.tunnel-is-ready";
 
 /**
  * The downloadable files and all information required to post-process them.
@@ -3081,7 +3093,6 @@ const main = async () => {
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
   core.setOutput("tunnel-url", tunnelUrl);
-  core.setOutput("tunnel_url", tunnelUrl);
 
   // Finally, we write a file to indicate that the tunnel is ready and we've done
   // everything we need to do from the script here.
@@ -3154,14 +3165,14 @@ const prepareService = async (service) => {
  */
 const extractService = async (downloadedFilename, extractedFilename) => {
   console.log(`>> Extracting file ./${downloadedFilename}.tar.gz`);
-  await childProcess.exec(
-    `cd ./resources && tar -xf ./${downloadedFilename}.tar.gz`
+  childProcess.exec(
+    `cd ${RESOURCES_FOLDER} && tar -xf ./${downloadedFilename}.tar.gz`
   );
 
   // Sometimes the tar process is not fully done creating the file, before the command exits.
   // We introduce a small check and delay here in that case, before renaming it.
   for (let i = 0; i < 10; i++) {
-    if (!fs.existsSync(`./resources/${extractedFilename}`)) {
+    if (!fs.existsSync(`${RESOURCES_FOLDER}/${extractedFilename}`)) {
       await delay(200);
     }
   }
@@ -3171,7 +3182,7 @@ const extractService = async (downloadedFilename, extractedFilename) => {
  * Download a file from a given URL, following redirects.
  */
 const download = (url, filename) => {
-  filename = `./resources/${filename}`;
+  filename = `${RESOURCES_FOLDER}/${filename}`;
   console.log(
     `>> Fetching binary from '${url}' and saving it to '${filename}'.`
   );

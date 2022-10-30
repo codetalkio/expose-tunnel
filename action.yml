@@ -19,14 +19,16 @@ inputs:
 outputs:
   tunnel-url:
     description: "The tunnel url that exposes the local service"
-  tunnel_url:
-    description: "The tunnel url that exposes the local service"
 branding:
   icon: message-circle
   color: purple
 runs:
   using: "composite"
   steps:
+    # Set up directory to hold outputs.
+    - run: mkdir -p /tmp/expose-tunnel
+      shell: bash
+
     - run: |
         # We manually set the input since we are using a composite step.
         export INPUT_SERVICE=${{ inputs.service }}
@@ -39,8 +41,5 @@ runs:
       shell: bash
 
     # Wait for it to have set the tunnel url and be done.
-    - run: |
-        timeout 30s bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
-        cat ./resources/.tunnel-url
-        echo "tunnel-url=$(cat ./resources/.tunnel-url)" >>$GITHUB_OUTPUT
+    - run: timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
       shell: bash
