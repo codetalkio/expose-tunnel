@@ -19,6 +19,7 @@ inputs:
 outputs:
   tunnel-url:
     description: "The tunnel url that exposes the local service"
+    value: ${{ steps.setup-tunnel.outputs.tunnel-url }}
 branding:
   icon: message-circle
   color: purple
@@ -32,6 +33,7 @@ runs:
     - run: |
         # Start the tunneling process in the background.
         node dist/index.js &
+      id: setup-tunnel
       # We manually set the input since we are using a composite step.
       env:
         INPUT_SERVICE: ${{ inputs.service }}
@@ -44,6 +46,7 @@ runs:
     # Wait for it to have set the tunnel url and be done.
     - run: |
         timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
-        echo "Tunnel URL is '$(cat /tmp/expose-tunnel/.tunnel-url)'"
-        echo "tunnel-url=$(cat /tmp/expose-tunnel/.tunnel-url)" >>$GITHUB_OUTPUT
+      #   echo "Tunnel URL is '$(cat /tmp/expose-tunnel/.tunnel-url)'"
+      #   echo "tunnel-url=$(cat /tmp/expose-tunnel/.tunnel-url)" >>$GITHUB_OUTPUT
+      # id: tunnel-output
       shell: bash
