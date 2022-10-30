@@ -48,5 +48,5 @@ runs:
       shell: bash
 
     - run: timeout ${{ inputs.blocking }} sleep 7200
-      if: inputs.blocking && inputs.blocking != ""
+      if: inputs.blocking && inputs.blocking != ''
       shell: bash
