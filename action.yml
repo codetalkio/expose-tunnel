@@ -29,5 +29,6 @@ runs:
   # main: "src/index.js"
   using: "composite"
   steps:
+    - uses: actions/checkout@v3
     - run: node src/index.js
       shell: bash
