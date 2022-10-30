@@ -42,9 +42,12 @@ jobs:
           port: ${{ matrix.port }}
 
       - name: Check the tunnel url was set
+        env:
+          TUNNEL_URL: ${{ steps.expose-tunnel.outputs.tunnel-url }}
         run: |
           echo "Tunnel URL was set to: '${{ steps.expose-tunnel.outputs.tunnel-url }}'"
           echo "Tunnel other URL was set to: '${{ steps.expose-tunnel.outputs.tunnel_url }}'"
+          echo "Tunnel other other URL was set to: '$TUNNEL_URL'"
           [[ "${{ steps.expose-tunnel.outputs.tunnel-url }}" != "" ]] && echo "URL passed checks." || exit 1
 
       - name: Check tunnel is accessible
