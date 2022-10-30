@@ -6,6 +6,7 @@
   "scripts": {
     "build": "ncc build src/main.js --license licenses.txt",
     "test": "INPUT_SERVICE=bore.pub INPUT_PORT=8080 node src/main.js",
+    "test:bore.selfhosted": "INPUT_SERVICE=bore.selfhosted INPUT_PORT=8080 INPUT_SELFHOSTEDENDPOINT=localhost node src/main.js",
     "test:localhost.run": "INPUT_SERVICE=localhost.run INPUT_PORT=8080 node src/main.js",
     "prepare": "husky install"
   },

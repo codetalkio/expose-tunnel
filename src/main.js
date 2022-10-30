@@ -60,6 +60,7 @@ const main = async () => {
     blocking,
   });
 
+  childProcess.exec(`mkdir -p ${RESOURCES_FOLDER}`);
   await prepareService(service);
   const { tunnelUrl, _tunnelProcess } = await startService(
     service,

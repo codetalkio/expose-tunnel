@@ -2,6 +2,8 @@ const { spawn } = require("child_process");
 const fs = require("fs");
 
 const { TUNNEL_URL_FILE, DEBUG_OUTPUT } = require("./constants.js");
+let saveTunnelUrl = undefined;
+let saveTunnelFailed = undefined;
 
 /**
  * Helper funciton to await a defined amount of time.
@@ -17,23 +19,33 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const waitForTunnelToBeReady = async () => {
   console.log(`>> Waiting for tunnel file '${TUNNEL_URL_FILE}' to be written.`);
   for (let i = 0; i < 100; i++) {
-    if (!fs.existsSync(TUNNEL_URL_FILE)) {
+    // if (!fs.existsSync(TUNNEL_URL_FILE)) {
+    //   await delay(200);
+    // }
+    if (!saveTunnelUrl && !saveTunnelFailed) {
       await delay(200);
     }
   }
 
-  if (!fs.existsSync(TUNNEL_URL_FILE)) {
-    console.log(`>> No tunnel file was created '${TUNNEL_URL_FILE}', exiting.`);
+  // if (!fs.existsSync(TUNNEL_URL_FILE)) {
+  //   console.log(`>> No tunnel file was created '${TUNNEL_URL_FILE}', exiting.`);
+  //   process.exit(1);
+  // }
+  // return fs.readFileSync(TUNNEL_URL_FILE, "utf8");
+
+  if (!saveTunnelUrl || saveTunnelFailed) {
+    console.log(
+      `>> Failed to set up tunnel, it is currently '${saveTunnelUrl}', exiting.`
+    );
     process.exit(1);
   }
-
-  return fs.readFileSync(TUNNEL_URL_FILE, "utf8");
+  return saveTunnelUrl;
 };
 
 /**
  * Start a tunnel as a child process, and listen for its stdout.
  */
-const startTunnelProcess = (command, arguments, parseOutput) => {
+const startTunnelProcess = (command, arguments, parseOutput, parseError) => {
   // Start the tunnel command with the supplied arguments.
   console.log(`>> Starting tunnel: ${command} ${arguments.join(" ")}`);
   const tunnel = spawn(command, arguments);
@@ -50,15 +62,26 @@ const startTunnelProcess = (command, arguments, parseOutput) => {
     }
     const tunnelUrl = parseOutput(stringData);
     if (tunnelUrl && tunnelUrl !== "") {
-      fs.writeFileSync(TUNNEL_URL_FILE, tunnelUrl, {
-        encoding: "utf8",
-      });
+      // fs.writeFileSync(TUNNEL_URL_FILE, tunnelUrl, {
+      //   encoding: "utf8",
+      // });
+      saveTunnelUrl = tunnelUrl;
     }
   });
 
   tunnel.stderr.on("data", (data) => {
+    const stringData = `${data}`;
+    if (!stringData) {
+      return;
+    }
     if (DEBUG_OUTPUT) {
       console.error(`stderr: ${data}`);
+    }
+    if (parseError) {
+      const failed = parseError(stringData);
+      if (failed) {
+        saveTunnelFailed = true;
+      }
     }
   });
 

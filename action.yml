@@ -26,10 +26,6 @@ branding:
 runs:
   using: "composite"
   steps:
-    # Set up directory to hold outputs.
-    - run: mkdir -p /tmp/expose-tunnel
-      shell: bash
-
     - run: |
         # Start the tunneling process in the background.
         node dist/index.js &

@@ -12,6 +12,7 @@ jobs:
       # Check out https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
       # for details on matrix strategies.
       matrix:
+        fail-fast: false
         service: [bore.pub, bore.selfhosted, localhost.run]
         include:
           - service: bore.selfhosted
@@ -40,6 +41,8 @@ jobs:
         with:
           service: ${{ matrix.service }}
           port: ${{ matrix.port }}
+          selfHostedEndpoint: ${{ matrix.selfHostedEndpoint }}
+          fallback: ${{ matrix.fallback }}
 
       - name: Check the tunnel url was set
         env:
