@@ -6,7 +6,9 @@
   "scripts": {
     "build": "ncc build src/main.js --license licenses.txt",
     "test": "INPUT_SERVICE=bore.pub INPUT_PORT=8080 node src/main.js",
-    "test:localhost.run": "INPUT_SERVICE=localhost.run INPUT_PORT=8080 node src/main.js"
+    "test:localhost.run": "INPUT_SERVICE=localhost.run INPUT_PORT=8080 node src/main.js",
+    "prepare": "husky install",
+    "pre-commit": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
     "@actions/core": "1.10.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "0.34.0"
+    "@vercel/ncc": "0.34.0",
+    "husky": "^8.0.1"
   }
 }

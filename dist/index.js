@@ -2753,7 +2753,7 @@ module.exports = {
 const { spawn } = __nccwpck_require__(81);
 const fs = __nccwpck_require__(147);
 
-const { TUNNEL_URL_FILE } = __nccwpck_require__(438);
+const { TUNNEL_URL_FILE, DEBUG_OUTPUT } = __nccwpck_require__(438);
 
 /**
  * Helper funciton to await a defined amount of time.
