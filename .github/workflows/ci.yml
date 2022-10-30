@@ -13,16 +13,20 @@ jobs:
       # Check out https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
       # for details on matrix strategies.
       matrix:
-        service: [bore.pub, bore.selfhosted, bore.selfhosted, localhost.run]
         include:
-          - port: 8080
-          # Trigger fallback mode.
-          - service: bore.selfhosted
-            selfHostedEndpoint: "localhost"
-            fallback: '["bore.pub"]'
+          - service: localhost.run
+            port: 8080
+          - service: bore.pub
+            port: 8080
           # Test actual self-hosted mode.
           - service: bore.selfhosted
+            port: 8080
             selfHostedEndpoint: "localhost"
+          # Trigger fallback mode.
+          - service: bore.selfhosted
+            port: 8080
+            selfHostedEndpoint: "localhost"
+            fallback: '["bore.pub"]'
 
     steps:
       - uses: actions/checkout@v3
