@@ -30,14 +30,15 @@ runs:
       shell: bash
 
     - run: |
-        # We manually set the input since we are using a composite step.
-        export INPUT_SERVICE=${{ inputs.service }}
-        export INPUT_PORT=${{ inputs.port }}
-        export INPUT_SELFHOSTEDENDPOINT=${{ inputs.selfHostedEndpoint }}
-        export INPUT_FALLBACK=${{ inputs.fallback }}
-        export INPUT_BLOCKING=${{ inputs.blocking }}
         # Start the tunneling process in the background.
         node dist/index.js &
+      # We manually set the input since we are using a composite step.
+      env:
+        INPUT_SERVICE: ${{ inputs.service }}
+        INPUT_PORT: ${{ inputs.port }}
+        INPUT_SELFHOSTEDENDPOINT: ${{ inputs.selfHostedEndpoint }}
+        INPUT_FALLBACK: ${{ inputs.fallback }}
+        INPUT_BLOCKING: ${{ inputs.blocking }}
       shell: bash
 
     # Wait for it to have set the tunnel url and be done.
