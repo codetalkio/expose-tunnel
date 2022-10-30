@@ -34,11 +34,12 @@ jobs:
       - name: Wait until local server is ready
         run: timeout 1m bash -c "while ! curl http://127.0.0.1:8080; do sleep 1 ; done"
 
-      - uses: ./
+      - name: Run the 'expose-tunnel' action from the local source
+        uses: ./
         id: expose-tunnel
         with:
-          service: bore.pub
-          port: 8080
+          service: ${{ matrix.service }}
+          port: ${{ matrix.port }}
 
       - name: Check the tunnel url was set
         run: |

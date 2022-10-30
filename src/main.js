@@ -211,6 +211,7 @@ const download = (url, filename) => {
   try {
     await main();
   } catch (err) {
-    console.error(err);
+    console.error(">> Something went wrong with the program:", err);
+    process.exit(1);
   }
 })();

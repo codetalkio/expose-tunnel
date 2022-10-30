@@ -3018,6 +3018,8 @@ const { delay } = __nccwpck_require__(989);
 const localhostRun = __nccwpck_require__(91);
 const bore = __nccwpck_require__(710);
 
+const TUNNEL_IS_READY_FILE = "./.tunnel-is-ready";
+
 /**
  * The downloadable files and all information required to post-process them.
  */
@@ -3079,6 +3081,12 @@ const main = async () => {
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
   core.setOutput("tunnel-url", tunnelUrl);
+
+  // Finally, we write a file to indicate that the tunnel is ready and we've done
+  // everything we need to do from the script here.
+  fs.writeFileSync(TUNNEL_IS_READY_FILE, "OK", {
+    encoding: "utf8",
+  });
 };
 
 /**
@@ -3213,7 +3221,8 @@ const download = (url, filename) => {
   try {
     await main();
   } catch (err) {
-    console.error(err);
+    console.error(">> Something went wrong with the program:", err);
+    process.exit(1);
   }
 })();
 
