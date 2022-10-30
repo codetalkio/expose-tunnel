@@ -1,0 +1,50 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      # Check out https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
+      # for details on matrix strategies.
+      matrix:
+        port: 8080
+        service: [bore.pub, bore.selfhosted, localhost.run]
+        include:
+          - service: bore.selfhosted
+            selfHostedEndpoint: "localhost"
+            fallback: [bore.pub]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18 # 18.12.0
+          cache: npm
+
+      - name: Starting a simple node.js http-server in the background
+        run: |
+          npm install -g http-server
+          http-server &
+
+      - name: Wait until local server is ready
+        run: timeout 1m bash -c "while ! curl http://127.0.0.1:8080; do sleep 1 ; done"
+
+      - uses: ./
+        id: expose-tunnel
+        with:
+          service: bore.pub
+          port: 8080
+
+      - name: Check the tunnel url was set
+        run: |
+          echo "Tunnel URL was set to: '${{ steps.expose-tunnel.outputs.tunnel-url }}'"
+          [[ "${{ steps.expose-tunnel.outputs.tunnel-url }}" != "" ]] && echo "URL passed checks." || exit 1
+
+      - name: Check tunnel is accessible
+        run: curl ${{ steps.expose-tunnel.outputs.tunnel-url }}
