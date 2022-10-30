@@ -53,6 +53,7 @@ jobs:
       - name: Wait until local server is ready
         run: timeout 1m bash -c "while ! curl -sSf http://127.0.0.1:8080; do sleep 1 ; done"
 
+      # See https://github.com/ekzhang/bore for how to setup and configure bore.
       - name: Set up bore locally
         if: matrix.service == 'bore.selfhosted' && matrix.selfHostedEndpoint && !matrix.fallback
         run: |
