@@ -3096,7 +3096,6 @@ const main = async () => {
 const startService = async (service, port, selfHostedEndpoint) => {
   console.log(`>> Starting tunnel to '${service}'..`);
   if (service === "bore.pub") {
-    console.error(">> To be implemented");
     return bore.startTunnel(port, "bore.pub");
   } else if (service === "bore.selfhosted") {
     console.error(">> To be implemented");

@@ -41,5 +41,6 @@ runs:
     # Wait for it to have set the tunnel url and be done.
     - run: |
         timeout 30s bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
-        # echo "tunnel-url=$(cat ./resources/.tunnel-url)" >>$GITHUB_OUTPUT
+        cat ./resources/.tunnel-url
+        echo "tunnel-url=$(cat ./resources/.tunnel-url)" >>$GITHUB_OUTPUT
       shell: bash
