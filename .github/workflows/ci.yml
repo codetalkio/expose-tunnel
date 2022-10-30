@@ -20,13 +20,13 @@ jobs:
             port: 8080
           # Test actual self-hosted mode.
           - service: bore.selfhosted
-            port: 8080
             selfHostedEndpoint: "localhost"
+            port: 8080
           # Trigger fallback mode.
           - service: bore.selfhosted
-            port: 8080
-            selfHostedEndpoint: "localhost"
             fallback: '["bore.pub"]'
+            selfHostedEndpoint: "localhost"
+            port: 8080
 
     steps:
       - uses: actions/checkout@v3
@@ -48,7 +48,7 @@ jobs:
         run: |
           wget https://github.com/ekzhang/bore/releases/download/v0.4.0/bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
           tar -xf bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
-          bore server &
+          ./bore server &
           sleep 2
 
       - name: Run the 'expose-tunnel' action from the local source
