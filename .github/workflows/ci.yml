@@ -17,7 +17,7 @@ jobs:
         include:
           - service: bore.selfhosted
             selfHostedEndpoint: "localhost"
-            fallback: "['bore.pub']"
+            fallback: '["bore.pub"]'
           - port: 8080
 
     steps:
