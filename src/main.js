@@ -48,6 +48,7 @@ const downloadUrl = {
 const main = async () => {
   const service = core.getInput("service");
   const port = core.getInput("port");
+  const secret = core.getInput("secret");
   const selfHostedEndpoint = core.getInput("selfHostedEndpoint");
   const fallback = core.getInput("fallback");
   const blocking = core.getInput("blocking");
@@ -56,6 +57,7 @@ const main = async () => {
     service,
     port,
     selfHostedEndpoint,
+    secret,
     fallback,
     blocking,
   });
@@ -77,7 +79,7 @@ const main = async () => {
       console.log(`>> Attempting fallback service '${s}'.`);
     }
     await prepareService(service);
-    const tunnel = await startService(s, port, selfHostedEndpoint);
+    const tunnel = await startService(s, port, selfHostedEndpoint, secret);
     if (tunnel.tunnelUrl) {
       tunnelUrl = tunnel.tunnelUrl;
       break;
@@ -109,18 +111,18 @@ const main = async () => {
 /**
  * Start the tunnel service.
  */
-const startService = async (service, port, selfHostedEndpoint) => {
+const startService = async (service, port, selfHostedEndpoint, secret) => {
   console.log(`>> Starting tunnel to '${service}'..`);
   if (service === "bore.pub") {
     return bore.startTunnel(port, "bore.pub");
   } else if (service === "bore.selfhosted") {
-    console.error(">> To be implemented");
     if (!selfHostedEndpoint || selfHostedEndpoint === "") {
       console.error(
         `When using service ${service}, the value 'selfHostedEndpoint' must be set! It was found to be '${selfHostedEndpoint}'.`
       );
+      process.exit(1);
     }
-    return bore.startTunnel(port, selfHostedEndpoint);
+    return bore.startTunnel(port, selfHostedEndpoint, secret);
   } else if (service === "localhost.run") {
     return localhostRun.startTunnel(port);
   }

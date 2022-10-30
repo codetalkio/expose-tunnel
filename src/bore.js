@@ -4,7 +4,7 @@ const { waitForTunnelToBeReady, startTunnelProcess } = require("./helper.js");
 /**
  * We start the SSH tunnel to localhost.run and return the tunnel url.
  */
-const startTunnel = async (port, endpoint) => {
+const startTunnel = async (port, endpoint, secret) => {
   /**
    *  Parse the URL out of the output string that looks roughly like the following:
    * ```
@@ -49,9 +49,14 @@ const startTunnel = async (port, endpoint) => {
     return false;
   };
 
+  const arguments = ["local", port, `--to`, endpoint];
+  if (secret) {
+    arguments.push("--secret");
+    arguments.push(secret);
+  }
   const tunnel = startTunnelProcess(
     `${RESOURCES_FOLDER}/bore`,
-    ["local", port, `--to`, endpoint],
+    arguments,
     parseOutput,
     parseError
   );

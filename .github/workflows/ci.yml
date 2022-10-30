@@ -14,11 +14,21 @@ jobs:
       # for details on matrix strategies.
       matrix:
         include:
+          # Test managed localhost.run.
           - service: localhost.run
             port: 8080
+          # Test managed bore.
           - service: bore.pub
             port: 8080
-          # Test actual self-hosted mode.
+          # Test self-hosted bore.
+          - service: bore.selfhosted
+            selfHostedEndpoint: "localhost"
+            port: 8080
+          # Test self-hosted bore with a secret.
+          - service: bore.selfhosted
+            secret: secret-value
+            selfHostedEndpoint: "localhost"
+            port: 8080
           - service: bore.selfhosted
             selfHostedEndpoint: "localhost"
             port: 8080
@@ -50,6 +60,8 @@ jobs:
           tar -xf bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
           ./bore server &
           sleep 2
+        env:
+          BORE_SECRET: ${{ matrix.secret }}
 
       - name: Run the 'expose-tunnel' action from the local source
         uses: ./
@@ -59,6 +71,7 @@ jobs:
           port: ${{ matrix.port }}
           selfHostedEndpoint: ${{ matrix.selfHostedEndpoint }}
           fallback: ${{ matrix.fallback }}
+          secret: ${{ matrix.secret }}
 
       - name: Check the tunnel url was set
         env:
