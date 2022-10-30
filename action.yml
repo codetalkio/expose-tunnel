@@ -18,12 +18,11 @@ inputs:
     required: false
     description: If the step should block and keep the job alive for the specified amount of time. This means you won't be able to use the output in later steps since the tunnel will be closing after the step.
 outputs:
-  time: # id of output
-    description: "The time"
-  thread_ts: # threaded timestamp on the message that was posted when using bot token
-    description: "The timestamp on the message that was posted into Slack when using bot token"
-  ts: # timestamp of message posted
-    description: "The timestamp on the message that was posted into Slack when using bot token"
+  tunnel-url:
+    description: "The tunnel url that exposes the local service"
+branding:
+  icon: message-circle
+  color: purple
 runs:
   using: "composite"
   steps:

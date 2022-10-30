@@ -2,7 +2,7 @@
 node_modules
 
 # Generated test files.
-resources/
+resources/*
 !resources/.gitkeep
 service
 .tunnel-url
