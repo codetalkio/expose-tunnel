@@ -12,12 +12,11 @@ jobs:
       # Check out https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
       # for details on matrix strategies.
       matrix:
-        service: [bore.pub]
-        # service: [bore.pub, bore.selfhosted, localhost.run]
+        service: [bore.pub, bore.selfhosted, localhost.run]
         include:
-          # - service: bore.selfhosted
-          #   selfHostedEndpoint: "localhost"
-          #   fallback: [bore.pub]
+          - service: bore.selfhosted
+            selfHostedEndpoint: "localhost"
+            fallback: [bore.pub]
           - port: 8080
 
     steps:
@@ -33,7 +32,7 @@ jobs:
           http-server &
 
       - name: Wait until local server is ready
-        run: timeout 1m bash -c "while ! curl http://127.0.0.1:8080; do sleep 1 ; done"
+        run: timeout 1m bash -c "while ! curl -sSf http://127.0.0.1:8080; do sleep 1 ; done"
 
       - name: Run the 'expose-tunnel' action from the local source
         uses: ./
@@ -47,9 +46,7 @@ jobs:
           TUNNEL_URL: ${{ steps.expose-tunnel.outputs.tunnel-url }}
         run: |
           echo "Tunnel URL was set to: '${{ steps.expose-tunnel.outputs.tunnel-url }}'"
-          echo "Tunnel other URL was set to: '${{ steps.expose-tunnel.outputs.tunnel_url }}'"
-          echo "Tunnel other other URL was set to: '$TUNNEL_URL'"
           [[ "${{ steps.expose-tunnel.outputs.tunnel-url }}" != "" ]] && echo "URL passed checks." || exit 1
 
       - name: Check tunnel is accessible
-        run: curl ${{ steps.expose-tunnel.outputs.tunnel-url }}
+        run: curl -sSf ${{ steps.expose-tunnel.outputs.tunnel-url }}

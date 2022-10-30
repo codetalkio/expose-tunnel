@@ -44,9 +44,5 @@ runs:
       shell: bash
 
     # Wait for it to have set the tunnel url and be done.
-    - run: |
-        timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
-      #   echo "Tunnel URL is '$(cat /tmp/expose-tunnel/.tunnel-url)'"
-      #   echo "tunnel-url=$(cat /tmp/expose-tunnel/.tunnel-url)" >>$GITHUB_OUTPUT
-      # id: tunnel-output
+    - run: timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
       shell: bash
