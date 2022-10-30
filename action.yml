@@ -34,5 +34,7 @@ runs:
       shell: bash
 
     # Wait for it to have set the tunnel url and be done.
-    - run: timeout 1m bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
+    - run: |
+        timeout 30s bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
+        ls ./
       shell: bash
