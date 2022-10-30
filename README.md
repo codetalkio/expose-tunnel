@@ -47,7 +47,7 @@ The following arguments are supported:
 | `port` | Yes | The local port we are creating a tunnel to | `80` | Any port you want |
 | `selfHostedEndpoint` | No, unless [bore.selfhosted](https://github.com/ekzhang/bore#self-hosting) was specified as the `service` | The endpoint to the self-hosted service | N/A | N/A |
 | `fallback` | No | Fallback strategy if the preferred `service` isn't available (e.g. self-hosted is down, fallback to managed service) | `'[]'` | All services |
-| `blocking` | No | If the step should block and keep the job alive for the specified amount of time. This means you won't be able to use the output in later steps since the tunnel will be closing after the step. | `false` | `false` or any minute number, specificed as `<num>m` e.g. `30m` |
+| `blocking` | No | If the step should block and keep the job alive for the specified amount of time. This means you won't be able to use the output in later steps since the tunnel will be closing after the step. | `false` | `false` or any minute number, specificed as `<num>m` e.g. `30m` (max is `120m`) |
 
 Putting all these into play could look like this:
 

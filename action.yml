@@ -46,3 +46,7 @@ runs:
     # Wait for it to have set the tunnel url and be done.
     - run: timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
       shell: bash
+
+    - run:
+      if: inputs.blocking && inputs.blocking != ""
+      run: timeout ${{ inputs.blocking }} sleep 7200
