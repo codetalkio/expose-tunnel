@@ -40,7 +40,7 @@ jobs:
         run: timeout 1m bash -c "while ! curl -sSf http://127.0.0.1:8080; do sleep 1 ; done"
 
       - name: Set up bore locally
-        if: matrix.service == "bore.selfhosted" && matrix.selfHostedEndpoint && !matrix.fallback
+        if: ${{ matrix.service == "bore.selfhosted" && matrix.selfHostedEndpoint && !matrix.fallback }}
         run: |
           wget https://github.com/ekzhang/bore/releases/download/v0.4.0/bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
           tar -xf bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz

@@ -2785,7 +2785,6 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { spawn } = __nccwpck_require__(81);
-const fs = __nccwpck_require__(147);
 
 const { TUNNEL_URL_FILE, DEBUG_OUTPUT } = __nccwpck_require__(438);
 let saveTunnelUrl = undefined;
@@ -2805,19 +2804,10 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const waitForTunnelToBeReady = async () => {
   console.log(`>> Waiting for tunnel file '${TUNNEL_URL_FILE}' to be written.`);
   for (let i = 0; i < 50; i++) {
-    // if (!fs.existsSync(TUNNEL_URL_FILE)) {
-    //   await delay(200);
-    // }
     if (!saveTunnelUrl && !saveTunnelFailed) {
       await delay(200);
     }
   }
-
-  // if (!fs.existsSync(TUNNEL_URL_FILE)) {
-  //   console.log(`>> No tunnel file was created '${TUNNEL_URL_FILE}', exiting.`);
-  //   process.exit(1);
-  // }
-  // return fs.readFileSync(TUNNEL_URL_FILE, "utf8");
 
   if (!saveTunnelUrl || saveTunnelFailed) {
     console.log(
@@ -2848,9 +2838,6 @@ const startTunnelProcess = (command, arguments, parseOutput, parseError) => {
     }
     const tunnelUrl = parseOutput(stringData);
     if (tunnelUrl && tunnelUrl !== "") {
-      // fs.writeFileSync(TUNNEL_URL_FILE, tunnelUrl, {
-      //   encoding: "utf8",
-      // });
       saveTunnelUrl = tunnelUrl;
     }
   });
