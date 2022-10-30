@@ -11,7 +11,9 @@ This action makes it easy to do this from within a GitHub Action, which can be a
 - [Usage](#usage)
     - [Arguments](#arguments)
 - [Usecases](#usecases)
-    - [Post the Preview URL to a Slack Channel](#post-the-preview-url-to-a-slack-channel)
+    - [React to a comment](#react-to-a-comment)
+    - [Post the Tunnel URL as a comment on a Pull Request](#post-the-tunnel-url-as-a-comment-on-a-pull-request)
+    - [Post the Tunnel URL to a Slack Channel](#post-the-tunnel-url-to-a-slack-channel)
 
 # Usage
 
