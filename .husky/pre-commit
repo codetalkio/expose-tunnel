@@ -1,5 +1,20 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run build
-git add dist/index.js
+# Find all changed files for this commit
+# Compute the diff only once to save a small amount of time.
+CHANGED_FILES=$(git diff --name-only --cached --diff-filter=ACMR)
+
+# Get only changed files that match our file suffix pattern
+get_pattern_files() {
+  pattern=$(echo "$*" | sed "s/ /\$\\\|/g")
+  echo "$CHANGED_FILES" | { grep "$pattern$" || true; }
+}
+# Get all changed python files
+JS_FILES=$(get_pattern_files .js)
+JSON_FILES=$(get_pattern_files .json)
+
+if [[ -n "$JS_FILES" || -n "$JSON_FILES" ]]; then
+  npm run build
+  git add dist/index.js
+fi
