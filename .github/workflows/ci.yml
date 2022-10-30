@@ -15,10 +15,14 @@ jobs:
       matrix:
         service: [bore.pub, bore.selfhosted, localhost.run]
         include:
+          - port: 8080
+          # Trigger fallback mode.
           - service: bore.selfhosted
             selfHostedEndpoint: "localhost"
             fallback: '["bore.pub"]'
-          - port: 8080
+          # Test actual self-hosted mode.
+          - service: bore.selfhosted
+            selfHostedEndpoint: "localhost"
 
     steps:
       - uses: actions/checkout@v3
@@ -34,6 +38,14 @@ jobs:
 
       - name: Wait until local server is ready
         run: timeout 1m bash -c "while ! curl -sSf http://127.0.0.1:8080; do sleep 1 ; done"
+
+      - name: Set up bore locally
+        if: matrix.service == "bore.selfhosted" && matrix.selfHostedEndpoint && !matrix.fallback
+        run: |
+          wget https://github.com/ekzhang/bore/releases/download/v0.4.0/bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
+          tar -xf bore-v0.4.0-x86_64-unknown-linux-musl.tar.gz
+          bore server &
+          sleep 2
 
       - name: Run the 'expose-tunnel' action from the local source
         uses: ./

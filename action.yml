@@ -10,6 +10,9 @@ inputs:
   selfHostedEndpoint:
     required: false
     description: No, unless `bore.selfhosted` was specified as the `service`
+  secret:
+    required: false
+    description: Set a secret to be used for services that support it
   fallback:
     required: false
     description: Fallback strategy if the preferred `service` isn't available (e.g. self-hosted is down, fallback to managed service)
@@ -35,6 +38,7 @@ runs:
         INPUT_SERVICE: ${{ inputs.service }}
         INPUT_PORT: ${{ inputs.port }}
         INPUT_SELFHOSTEDENDPOINT: ${{ inputs.selfHostedEndpoint }}
+        INPUT_SECRET: ${{ inputs.secret }}
         INPUT_FALLBACK: ${{ inputs.fallback }}
         INPUT_BLOCKING: ${{ inputs.blocking }}
       shell: bash

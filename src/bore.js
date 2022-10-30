@@ -34,13 +34,15 @@ const startTunnel = async (port, endpoint) => {
    * or
    *
    * ```
+   * Error: could not connect to localhost:7835
+   * Caused by:
    *      Connection refused (os error 61)
    * ```
    */
   const parseError = (stderr) => {
     if (
       stderr.includes("failed to lookup address") ||
-      stderr.includes("Connection refused")
+      stderr.includes("Error: could not connect to")
     ) {
       return true;
     }

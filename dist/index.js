@@ -2727,13 +2727,15 @@ const startTunnel = async (port, endpoint) => {
    * or
    *
    * ```
+   * Error: could not connect to localhost:7835
+   * Caused by:
    *      Connection refused (os error 61)
    * ```
    */
   const parseError = (stderr) => {
     if (
       stderr.includes("failed to lookup address") ||
-      stderr.includes("Connection refused")
+      stderr.includes("Error: could not connect to")
     ) {
       return true;
     }
@@ -2798,11 +2800,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * Wait for the tunnel service to receive its URL from stdout, before it will then store this output
  * in a file that we can pick up.
  *
- * NOTE: We wait about 20 seconds (200 * 200ms = 40,000ms = 40s).
+ * NOTE: We wait about 10 seconds (50 * 200ms = 10,000ms = 10s).
  */
 const waitForTunnelToBeReady = async () => {
   console.log(`>> Waiting for tunnel file '${TUNNEL_URL_FILE}' to be written.`);
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 50; i++) {
     // if (!fs.existsSync(TUNNEL_URL_FILE)) {
     //   await delay(200);
     // }
