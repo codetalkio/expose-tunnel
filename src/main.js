@@ -69,7 +69,7 @@ const main = async () => {
   console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
-  core.setOutput("tunnel-url", tunnelUrl);
+  // core.setOutput("tunnel-url", tunnelUrl);
 
   // Finally, we write a file to indicate that the tunnel is ready and we've done
   // everything we need to do from the script here.
