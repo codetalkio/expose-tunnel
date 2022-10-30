@@ -25,10 +25,14 @@ outputs:
   ts: # timestamp of message posted
     description: "The timestamp on the message that was posted into Slack when using bot token"
 runs:
-  using: "node16"
-  main: "src/main.js"
-  # using: "composite"
-  # steps:
-  #   # - uses: actions/checkout@v3
-  #   - run: node src/main.js
-  #     shell: bash
+  # using: "node16"
+  # main: "src/main.js"
+  using: "composite"
+  steps:
+    # Start the tunneling process in the background.
+    - run: node dist/index.js &
+      shell: bash
+
+    # Wait for it to have set the tunnel url and be done.
+    - run: timeout 1m bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
+      shell: bash

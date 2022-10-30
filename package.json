@@ -4,6 +4,7 @@
   "description": "Easily create tunnels to access your GitHub Action workflows from public endpoints.",
   "main": "index.js",
   "scripts": {
+    "build": "ncc build src/main.js --license licenses.txt",
     "test": "INPUT_SERVICE=bore.pub INPUT_PORT=8080 node src/main.js",
     "test:localhost.run": "INPUT_SERVICE=localhost.run INPUT_PORT=8080 node src/main.js"
   },
@@ -18,7 +19,10 @@
     "url": "https://github.com/codetalkio/expose-tunnel/issues"
   },
   "homepage": "https://github.com/codetalkio/expose-tunnel#readme",
-  "devDependencies": {
+  "dependencies": {
     "@actions/core": "1.10.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "0.34.0"
   }
 }

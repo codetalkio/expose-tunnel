@@ -8,6 +8,8 @@ const { delay } = require("./helper.js");
 const localhostRun = require("./localhost-run.js");
 const bore = require("./bore.js");
 
+const TUNNEL_IS_READY_FILE = "./.tunnel-is-ready";
+
 /**
  * The downloadable files and all information required to post-process them.
  */
@@ -69,6 +71,12 @@ const main = async () => {
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
   core.setOutput("tunnel-url", tunnelUrl);
+
+  // Finally, we write a file to indicate that the tunnel is ready and we've done
+  // everything we need to do from the script here.
+  fs.writeFileSync(TUNNEL_IS_READY_FILE, "OK", {
+    encoding: "utf8",
+  });
 };
 
 /**
