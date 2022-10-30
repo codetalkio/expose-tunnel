@@ -1,4 +1,4 @@
-name: "expose-tunnel"
+name: "Expose Tunnel"
 description: "Easily create tunnels to access your GitHub Action workflows from public endpoints"
 inputs:
   service:
@@ -7,7 +7,6 @@ inputs:
   port:
     required: true
     description: The local port we are creating a tunnel to
-
   selfHostedEndpoint:
     required: false
     description: No, unless `bore.selfhosted` was specified as the `service`
@@ -19,6 +18,8 @@ inputs:
     description: If the step should block and keep the job alive for the specified amount of time. This means you won't be able to use the output in later steps since the tunnel will be closing after the step.
 outputs:
   tunnel-url:
+    description: "The tunnel url that exposes the local service"
+  tunnel_url:
     description: "The tunnel url that exposes the local service"
 branding:
   icon: message-circle
@@ -40,5 +41,5 @@ runs:
     # Wait for it to have set the tunnel url and be done.
     - run: |
         timeout 30s bash -c 'until [ -f ./.tunnel-is-ready ]; do sleep 1; echo "Waiting for ./.tunnel-is-ready to be ready..."; done;'
-        echo "tunnel-url=$(cat ./resources/.tunnel-url)" >>$GITHUB_OUTPUT
+        # echo "tunnel-url=$(cat ./resources/.tunnel-url)" >>$GITHUB_OUTPUT
       shell: bash

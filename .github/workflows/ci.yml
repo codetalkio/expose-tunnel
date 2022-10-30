@@ -44,6 +44,7 @@ jobs:
       - name: Check the tunnel url was set
         run: |
           echo "Tunnel URL was set to: '${{ steps.expose-tunnel.outputs.tunnel-url }}'"
+          echo "Tunnel other URL was set to: '${{ steps.expose-tunnel.outputs.tunnel_url }}'"
           [[ "${{ steps.expose-tunnel.outputs.tunnel-url }}" != "" ]] && echo "URL passed checks." || exit 1
 
       - name: Check tunnel is accessible
