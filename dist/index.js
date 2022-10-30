@@ -2748,10 +2748,11 @@ const startTunnel = async (port, endpoint) => {
     parseOutput,
     parseError
   );
-  const tunnelUrl = await waitForTunnelToBeReady();
+  const { tunnelUrl, tunnelFailed } = await waitForTunnelToBeReady();
 
   return {
     tunnelUrl,
+    tunnelFailed,
     tunnelProcess: tunnel,
   };
 };
@@ -2815,7 +2816,10 @@ const waitForTunnelToBeReady = async () => {
     );
     process.exit(1);
   }
-  return saveTunnelUrl;
+  return {
+    tunnelUrl: saveTunnelUrl,
+    tunnelFailed: saveTunnelFailed,
+  };
 };
 
 /**
@@ -2918,10 +2922,11 @@ const startTunnel = async (port) => {
     ],
     parseOutput
   );
-  const tunnelUrl = await waitForTunnelToBeReady();
+  const { tunnelUrl, tunnelFailed } = await waitForTunnelToBeReady();
 
   return {
     tunnelUrl,
+    tunnelFailed,
     tunnelProcess: tunnel,
   };
 };
@@ -3134,16 +3139,34 @@ const main = async () => {
 
   childProcess.exec(`mkdir -p ${RESOURCES_FOLDER}`);
 
+  let fallbackServices = [];
   if (fallback) {
     console.log("Fallback:", JSON.parse(fallback));
+    fallbackServices = JSON.parse(fallback);
   }
+  const services = [service, ...fallbackServices];
 
-  await prepareService(service);
-  const { tunnelUrl, _tunnelProcess } = await startService(
-    service,
-    port,
-    selfHostedEndpoint
-  );
+  // Try all fallbacks.
+  for (let i = 0; i < services.length; i++) {
+    const s = services[i];
+    if (i > 0) {
+      console.log(`>> Attempting fallback service '${s}'.`);
+    }
+    await prepareService(service);
+    const { tunnelUrl, tunnelFailed, _tunnelProcess } = await startService(
+      s,
+      port,
+      selfHostedEndpoint
+    );
+    if (tunnelUrl) {
+      break;
+    } else if (tunnelFailed) {
+      console.error(
+        `>> Failed to set up tunnel using service '${s}', proceeding to any fallbacks.`
+      );
+      continue;
+    }
+  }
   console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
   // We store the output in 'tunnel-url' so its accessible outside the step.

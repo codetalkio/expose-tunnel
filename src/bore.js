@@ -55,10 +55,11 @@ const startTunnel = async (port, endpoint) => {
     parseOutput,
     parseError
   );
-  const tunnelUrl = await waitForTunnelToBeReady();
+  const { tunnelUrl, tunnelFailed } = await waitForTunnelToBeReady();
 
   return {
     tunnelUrl,
+    tunnelFailed,
     tunnelProcess: tunnel,
   };
 };

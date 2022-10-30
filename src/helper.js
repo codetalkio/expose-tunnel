@@ -29,7 +29,10 @@ const waitForTunnelToBeReady = async () => {
     );
     process.exit(1);
   }
-  return saveTunnelUrl;
+  return {
+    tunnelUrl: saveTunnelUrl,
+    tunnelFailed: saveTunnelFailed,
+  };
 };
 
 /**
