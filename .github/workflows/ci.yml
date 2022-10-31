@@ -10,6 +10,16 @@ defaults:
     shell: bash # Set the default shell to bash.
 
 jobs:
+  validate-usage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run the 'expose-tunnel' action from main
+        uses: codetalkio/expose-tunnel@main
+        id: expose-tunnel
+        with:
+          service: bore.pub
+          port: 80
+
   test:
     runs-on: ubuntu-latest
     strategy:
