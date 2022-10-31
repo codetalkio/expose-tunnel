@@ -29,6 +29,14 @@ branding:
 runs:
   using: "composite"
   steps:
+    # Debug action paths.
+    - run: |
+        echo "Checking path '${{ github.action_path }}'."
+        ls ${{ github.action_path }}
+        echo "Checking path '$GITHUB_ACTION_PATH'."
+        ls $GITHUB_ACTION_PATH
+      shell: bash
+
     - run: |
         # Start the tunneling process in the background.
         node ${{ github.action_path }}/dist/index.js &
