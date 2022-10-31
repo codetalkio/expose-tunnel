@@ -31,7 +31,7 @@ runs:
   steps:
     - run: |
         # Start the tunneling process in the background.
-        node dist/index.js &
+        node ${{ github.action_path }}/dist/index.js &
       id: setup-tunnel
       # We manually set the input since we are using a composite step.
       env:
