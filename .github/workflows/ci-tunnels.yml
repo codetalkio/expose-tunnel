@@ -1,4 +1,4 @@
-name: "CI: Test Tunnel Forwarding"
+name: "CI: Tunnel Forwarding"
 on:
   pull_request:
   push:
@@ -10,18 +10,7 @@ defaults:
     shell: bash # Set the default shell to bash.
 
 jobs:
-  validate-external-usage:
-    runs-on: ubuntu-latest
-    # Validate that the action itself can be run without having checked out the repository.
-    steps:
-      - name: Run the 'expose-tunnel' action from main
-        uses: codetalkio/expose-tunnel@main
-        id: expose-tunnel
-        with:
-          service: bore.pub
-          port: 80
-
-  test:
+  tunnel:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
