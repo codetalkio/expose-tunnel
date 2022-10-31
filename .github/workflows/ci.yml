@@ -10,8 +10,9 @@ defaults:
     shell: bash # Set the default shell to bash.
 
 jobs:
-  validate-usage:
+  validate-external-usage:
     runs-on: ubuntu-latest
+    # Validate that the action itself can be run without having checked out the repository.
     steps:
       - name: Run the 'expose-tunnel' action from main
         uses: codetalkio/expose-tunnel@main
