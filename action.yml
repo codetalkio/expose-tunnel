@@ -48,6 +48,7 @@ runs:
         timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
         # To ensure the output has been correctly picked up (sometimes it can race-condition), we
         # wait an additional second.
+        echo ">> Tunnel url stored in output: '${{ steps.setup-tunnel.outputs.tunnel-url }}'"
         sleep 1
       shell: bash
 
