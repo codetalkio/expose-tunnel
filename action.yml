@@ -44,7 +44,12 @@ runs:
       shell: bash
 
     # Wait for it to have set the tunnel url and be done.
-    - run: timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
+    - run: |
+        timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
+        # To ensure the output has been correctly picked up (sometimes it can race-condition), we
+        # wait an additional second.
+        cat "Tunnel is ready: $(/tmp/expose-tunnel/.tunnel-is-ready)"
+        sleep 1
       shell: bash
 
     - run: timeout ${{ inputs.blocking }} sleep 7200

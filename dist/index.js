@@ -3171,15 +3171,15 @@ const main = async () => {
     }
   }
   if (!tunnelUrl) {
-    console.log(
+    console.error(
       `>> Failed to set up tunnel, it is currently '${tunnelUrl}', exiting.`
     );
     process.exit(1);
   }
-  console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
   // We store the output in 'tunnel-url' so its accessible outside the step.
   core.setOutput("tunnel-url", tunnelUrl);
+  console.log(`>> The tunnel url was: '${tunnelUrl}'.`);
 
   // Finally, we write a file to indicate that the tunnel is ready and we've done
   // everything we need to do from the script here.
