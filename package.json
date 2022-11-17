@@ -1,6 +1,6 @@
 {
   "name": "expose-tunnel",
-  "version": "1.0.0",
+  "version": "1.4.0",
   "description": "Easily create tunnels to access your GitHub Action workflows from public endpoints.",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,6 @@
   },
   "devDependencies": {
     "@vercel/ncc": "0.34.0",
-    "husky": "^8.0.1"
+    "husky": "8.0.2"
   }
 }

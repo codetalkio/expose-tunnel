@@ -24,7 +24,7 @@ steps:
 - name: Starting services
   run: echo "Start up your services before exposing them...."
 
-- uses: codetalkio/expose-tunnel@v1
+- uses: codetalkio/expose-tunnel@v1.4.0
   id: expose-tunnel
   with:
     service: bore.pub
@@ -58,7 +58,7 @@ steps:
 - name: Starting services
   run: echo "Start up your services before exposing them...."
 
-- uses: codetalkio/expose-tunnel@v1
+- uses: codetalkio/expose-tunnel@v1.4.0
   id: expose-tunnel
   with:
     service: bore.selfhosted
@@ -93,7 +93,7 @@ Start up services and create the tunnel environment when a comment or the first 
   if: steps.check.outputs.triggered == 'true'
   run: echo "Start up your services before exposing them...."
 
-- uses: codetalkio/expose-tunnel@v1
+- uses: codetalkio/expose-tunnel@v1.4.0
   if: steps.check.outputs.triggered == 'true'
   id: expose-tunnel
   with:
@@ -118,7 +118,7 @@ steps:
 - name: Starting services
   run: echo "Start up your services before exposing them...."
 
-- uses: codetalkio/expose-tunnel@v1
+- uses: codetalkio/expose-tunnel@v1.4.0
   id: expose-tunnel
   with:
     service: bore.pub
@@ -166,7 +166,7 @@ steps:
 - name: Starting services
   run: echo "Start up your services before exposing them...."
 
-- uses: codetalkio/expose-tunnel@v1
+- uses: codetalkio/expose-tunnel@v1.4.0
   id: expose-tunnel
   with:
     service: bore.pub
