@@ -31,7 +31,7 @@ runs:
   steps:
     - run: |
         # Start the tunneling process in the background.
-        node ${{ github.action_path }}/dist/index.js &
+        node ${{ github.action_path }}/dist/index.js > /tmp/expose-tunnel.log 2>&1 &
       id: setup-tunnel
       # We manually set the input since we are using a composite step.
       env:
@@ -48,6 +48,7 @@ runs:
         timeout 30s bash -c 'until [ -f /tmp/expose-tunnel/.tunnel-is-ready ]; do sleep 1; echo "Waiting for /tmp/expose-tunnel/.tunnel-is-ready to be ready..."; done;'
         # To ensure the output has been correctly picked up (sometimes it can race-condition), we
         # wait an additional second.
+        cat /tmp/expose-tunnel.log
         echo ">> Tunnel url stored in output: '${{ steps.setup-tunnel.outputs.tunnel-url }}'"
         sleep 1
       shell: bash
